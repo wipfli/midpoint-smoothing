@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Midpoint Smoothing</title>
+    <meta charset='utf-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel='stylesheet' href='vendor/maplibre-gl/dist/maplibre-gl.css' />
+    <script src='vendor/maplibre-gl/dist/maplibre-gl.js'></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        html,
+        body,
+        #map {
+            height: 100%;
+        }
+
+        #checkbox-container {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            z-index: 1000;
+            background-color: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+
+<body>
+    <div id="checkbox-container">
+        <label>
+            <input type="radio" name="layer" value="original" checked> original
+        </label>
+        <br />
+        <br />
+        <label>
+            <input type="radio" name="layer" value="midpoint-1"> midpoint-1
+        </label>
+        <br />
+        <br />
+        <label>
+            <input type="radio" name="layer" value="midpoint-2"> midpoint-2
+        </label>
+        <br />
+        <br />
+        <label>
+            <input type="radio" name="layer" value="midpoint-3"> midpoint-3
+        </label>
+    </div>
+    <div id="map"></div>
+
+    <script>
+        const map = new maplibregl.Map({
+            container: 'map',
+            style: 'style.json',
+            center: [7.8421, 46.6663],
+            zoom: 8,
+            hash: 'map'
+        });
+
+        function show(layer) {
+            const allLayers = ['original', 'midpoint-1', 'midpoint-2','midpoint-3'];
+
+            // hide all
+            for (const l of allLayers) {
+                map.setLayoutProperty(l, 'visibility', 'none');
+                map.setLayoutProperty(`${l}-line`, 'visibility', 'none');
+            }
+
+            // show selected
+            map.setLayoutProperty(layer, 'visibility', 'visible');
+            map.setLayoutProperty(`${layer}-line`, 'visibility', 'visible');
+        }
+
+        const radioButtons = document.getElementsByName('layer');
+        radioButtons.forEach(button => {
+            button.addEventListener('change', function () {
+                show(this.value);
+            });
+        });
+    </script>
+</body>
+
+</html>
